@@ -1,0 +1,41 @@
+USE ODS;
+
+INSERT INTO ODS_DM_CANALES (DE_CANAL, FC_INSERT, FC_MODIFICACION)
+SELECT DISTINCT UPPER(TRIM(PRO.CHANNEL)), NOW(), NOW()
+FROM STAGE.STG_PRODUCTOS_CRM PRO
+WHERE TRIM(PRO.CHANNEL)<>'';
+
+INSERT INTO ODS_DM_CANALES VALUES (99, 'DESCONOCIDO', NOW(),NOW());
+INSERT INTO ODS_DM_CANALES VALUES (98, 'NO APLICA', NOW(),NOW());
+
+COMMIT;
+
+ANALYZE TABLE ODS_DM_CANALES;
+
+
+INSERT INTO ODS.ODS_DM_PRODUCTOS (DE_PRODUCTO, FC_INSERT, FC_MODIFICACION)
+SELECT DISTINCT UPPER(TRIM(PRO.PRODUCT_NAME)), NOW(), NOW()
+FROM STAGE.STG_PRODUCTOS_CRM PRO
+WHERE TRIM(PRO.PRODUCT_NAME)<>'';
+
+INSERT INTO ODS_DM_PRODUCTOS VALUES (99, 'DESCONOCIDO', NOW(),NOW());
+INSERT INTO ODS_DM_PRODUCTOS VALUES (98, 'NO APLICA', NOW(),NOW());
+
+COMMIT;
+
+ANALYZE TABLE ODS_DM_PRODUCTOS;
+
+
+/****
+Para rellenar las direcciones de los servicios primero tengo que rellenar la tabla ODS_DM_PAISES con los paises
+que aparecieran en la tabla de STAGE.STG_PRODUCTOS_CRM. En este caso aparece el texto United States que hemos
+decidido por no complicar más el modelo traducirlo en US.
+Luego tenemos que rellenar la tabla ODS_DM_CIUDADES_ESTADO con los nuevos pares ciudad, estado que puedan aparecer
+en la tabla STAGE.STG_PRODUCTOS_CRM.
+Por último tengo que introducir las nuevas direciones en ODS.ODS_HC_DIRECCIONES.
+
+Script POBLAR_ODS_SERVICIOS II
+***/
+
+
+
